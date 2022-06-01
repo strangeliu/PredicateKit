@@ -29,20 +29,24 @@ struct NSExpressionConversionOptions {
   let keyPathsPrefix: String?
 }
 
-struct NSFetchRequestBuilder {
-  struct Options {
+public struct NSFetchRequestBuilder {
+  public struct Options {
     let keyPathsPrefix: String?
+      
+    public init(keyPathsPrefix: String?) {
+      self.keyPathsPrefix = keyPathsPrefix
+    }
   }
 
   private let entityName: String
   private let options: Options
 
-  init(entityName: String, options: Options = .init(keyPathsPrefix: nil)) {
+  public init(entityName: String, options: Options = .init(keyPathsPrefix: nil)) {
     self.entityName = entityName
     self.options = options
   }
 
-  func makeRequest<Entity: NSManagedObject, Result: NSFetchRequestResult>(
+  public func makeRequest<Entity: NSManagedObject, Result: NSFetchRequestResult>(
     from request: FetchRequest<Entity>
   ) -> NSFetchRequest<Result> {
     let fetchRequest = NSFetchRequest<Result>(entityName: entityName)
@@ -66,7 +70,7 @@ struct NSFetchRequestBuilder {
     return fetchRequest
   }
 
-  fileprivate func makePredicate<Root>(from predicate: Predicate<Root>) -> NSPredicate {
+  public func makePredicate<Root>(from predicate: Predicate<Root>) -> NSPredicate {
     switch predicate {
     case let .comparison(comparison):
       switch comparison.modifier {
