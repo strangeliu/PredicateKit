@@ -380,6 +380,11 @@ public func != <E: Expression, T: Equatable & Primitive> (lhs: E, rhs: T) -> Pre
   .comparison(.init(lhs, .notEqual, rhs))
 }
 
+@_disfavoredOverload
+public func != <E: Expression> (lhs: E, rhs: Nil) -> Predicate<E.Root> where E.Value: OptionalType {
+  .comparison(.init(lhs, .notEqual, rhs))
+}
+
 public func >= <E: Expression, T: Comparable & Primitive> (lhs: E, rhs: T) -> Predicate<E.Root> where E.Value == T {
   .comparison(.init(lhs, .greaterThanOrEqual, rhs))
 }
