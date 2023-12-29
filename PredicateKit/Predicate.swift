@@ -368,7 +368,7 @@ public func <= <E: Expression, T: Comparable & Primitive> (lhs: E, rhs: T) -> Pr
 }
 
 public func == <E: Expression, T: Equatable & Primitive> (lhs: E, rhs: T) -> Predicate<E.Root> where E.Value == T {
-  .comparison(.init(lhs, .equal, rhs))
+  .comparison(.init(lhs, .equal, rhs, T.self == String.self ? .caseInsensitive : .normalized))
 }
 
 @_disfavoredOverload

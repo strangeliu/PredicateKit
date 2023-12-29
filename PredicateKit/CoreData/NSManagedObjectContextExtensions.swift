@@ -137,7 +137,7 @@ public struct FetchRequest<Entity: NSManagedObject> {
     }
   }
 
-  private let context: NSManagedObjectContext
+  public let context: NSManagedObjectContext
   private(set) var predicate: Predicate<Entity>
   private(set) var sortCriteria: [SortCriterion<Entity>] = []
   private(set) var limit: Int?
@@ -311,6 +311,14 @@ public struct FetchRequest<Entity: NSManagedObject> {
     #else
     return self
     #endif
+  }
+    
+  public var nsPredicate: NSPredicate {
+    requestBuilder.makePredicate(from: predicate)
+  }
+    
+  public var nsRequest: NSFetchRequest<Entity> {
+    requestBuilder.makeRequest(from: self)
   }
 
   // MARK: -
