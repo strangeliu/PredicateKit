@@ -250,7 +250,7 @@ import Foundation
 ///     let predicate = (\Account.name).contains("Account") && all(\.profiles, where: (\Profile.name).contains("Doe")).size == 2)
 ///
 ///
-public indirect enum Predicate<Root> {
+public indirect enum Predicate<Root>: Sendable {
   case comparison(Comparison)
   case boolean(Bool)
   case and(Predicate<Root>, Predicate<Root>)
@@ -336,7 +336,7 @@ public enum ComparisonModifier {
   case none
 }
 
-public struct ComparisonOptions: OptionSet {
+public struct ComparisonOptions: OptionSet, Sendable {
   public let rawValue: Int
 
   public static let caseInsensitive = ComparisonOptions(rawValue: 1 << 0)
@@ -368,7 +368,11 @@ public func <= <E: Expression, T: Comparable & Primitive> (lhs: E, rhs: T) -> Pr
 }
 
 public func == <E: Expression, T: Equatable & Primitive> (lhs: E, rhs: T) -> Predicate<E.Root> where E.Value == T {
-  .comparison(.init(lhs, .equal, rhs, T.self == String.self ? .caseInsensitive : .normalized))
+    if let rhs = rhs as? Bool, !rhs {
+        .comparison(.init(lhs, .equal, rhs, T.self == String.self ? .caseInsensitive : .normalized)) || .comparison(.init(lhs, .equal, Nil(nilLiteral: ()), T.self == String.self ? .caseInsensitive : .normalized))
+    } else {
+        .comparison(.init(lhs, .equal, rhs, T.self == String.self ? .caseInsensitive : .normalized))
+    }
 }
 
 @_disfavoredOverload
